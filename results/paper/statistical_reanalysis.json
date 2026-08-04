@@ -1,0 +1,572 @@
+{
+  "command_line": [
+    "tools/reanalyze_confirmatory_statistics.py"
+  ],
+  "environment": {
+    "cpu_count": 28,
+    "dependency_versions": {
+      "numba": "0.65.1",
+      "numpy": "2.4.6",
+      "psutil": "7.2.2",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.17.1"
+    },
+    "machine": "x86_64",
+    "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "thread_environment": {
+      "MKL_NUM_THREADS": null,
+      "NUMEXPR_NUM_THREADS": null,
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null
+    }
+  },
+  "evidence_label": "authorized_post_review_statistical_correction_no_retuning",
+  "experiment": "dual_bound_force_statistical_reanalysis",
+  "generated_at_utc": "2026-08-03T15:02:03.872546+00:00",
+  "parameters": {
+    "alpha": 0.05,
+    "effect_interval": "two-sided 95% paired t interval",
+    "frozen_results_policy": "source bundles are read-only and were not rewritten",
+    "multiplicity": "Holm step-down adjustment across exactly five scientific hypotheses",
+    "primary_test": "one-sided paired t test of the mean",
+    "scientific_family": [
+      "structural_out_of_subspace_improvement",
+      "casewise_noninferiority_5pct",
+      "cellwise_noninferiority_5pct",
+      "clean_noninferiority_5pct",
+      "pbmc_structural_improvement"
+    ],
+    "sensitivity_interval": "10,000-resample paired percentile bootstrap"
+  },
+  "preprocessing": {
+    "pbmc_analysis_unit": "fault replicate seed on one fixed matrix",
+    "pbmc_reference": {
+      "array_sha256": "077793e262785f3b6d78cef2fc97c8c9fbbe46aac79330d29f8bf70f47c6e127",
+      "created_at_utc": "2026-08-03T14:18:13.053833+00:00",
+      "diagnostics": {
+        "certified": true,
+        "cross_start_normalized_subspace_change": 3.4098239607388707e-06,
+        "estimated_next_singular_value": 481.7901081296464,
+        "estimated_rank_gap": 5.609721348725259,
+        "estimated_rank_singular_value": 487.39982947837166,
+        "maximum_orthogonality_error": 9.442518163348547e-15,
+        "maximum_principal_sine_between_starts": 1.291247310047833e-05,
+        "maximum_relative_ritz_residual": 2.665596954990168e-06,
+        "starts": [
+          {
+            "converged": true,
+            "convergence_tolerance": 1e-06,
+            "last_iteration_subspace_change": 9.040369181694669e-07,
+            "orthogonality_error": 6.33609746852704e-15,
+            "oversamples": 20.0,
+            "power_iterations": 48.0,
+            "rayleigh_ritz_orthogonality_error": 9.442518163348547e-15,
+            "relative_ritz_residual": 2.665596954990168e-06,
+            "ritz_residual_frobenius_norm": 0.0015757566656307998,
+            "ritz_residual_spectral_norm": 0.0012992115013202746,
+            "seed": 49001
+          },
+          {
+            "converged": true,
+            "convergence_tolerance": 1e-06,
+            "last_iteration_subspace_change": 8.872315622863528e-07,
+            "orthogonality_error": 6.919171908024535e-15,
+            "oversamples": 20.0,
+            "power_iterations": 49.0,
+            "rayleigh_ritz_orthogonality_error": 9.016016544128196e-15,
+            "relative_ritz_residual": 2.6372787556554996e-06,
+            "ritz_residual_frobenius_norm": 0.0015497056772680678,
+            "ritz_residual_spectral_norm": 0.001285409215792209,
+            "seed": 49002
+          }
+        ]
+      },
+      "mode": "checksummed_two_start_rayleigh_ritz_certified_cache",
+      "parameters": {
+        "algorithm": "two_start_block_power_rayleigh_ritz_v2",
+        "audit_rank": 21,
+        "centering": "implicit_column_mean",
+        "convergence_tolerance": 1e-06,
+        "cross_start_tolerance": 0.0001,
+        "maximum_power_iterations": 160,
+        "minimum_power_iterations": 20,
+        "oversamples": 20,
+        "rank": 20,
+        "relative_residual_tolerance": 0.0001,
+        "scaling": "validated_prepared_feature_scales",
+        "seeds": [
+          49001,
+          49002
+        ]
+      },
+      "selected_gene_sha256": "9a7f9efaf60d8b84dce46b8e9c47d66837817406a7c601eb08e48e17fa4cea09",
+      "source_features_sha256": "81532973c69a72f6c22e3005d15ef9e759485c132806155738bc65af0c021b68",
+      "source_matrix_sha256": "68186fec380a3c42dbd6ce7728e7ff750335119754587f4a3b6a96b2c010e6d1",
+      "validated_at_utc": "2026-08-03T14:18:13.053833+00:00"
+    },
+    "synthetic_analysis_unit": "seed after equal weighting of strong and weak spectra"
+  },
+  "provenance": {
+    "input_artifacts": {
+      "results/confirmatory/dual-bound-force-confirmatory-full.json": "cadcb1c6637aef5a554389bb3caa995741ef88bd7f02da0806072a29ca8d7cbf",
+      "results/confirmatory/dual-bound-force-confirmatory-full.raw.csv": "84ab9232cd0e9d9581a311eb12a701a1e6ab33f771151e0a7454c50987b9ff38",
+      "results/confirmatory/dual-bound-force-pbmc-certified-full.json": "edc4a708d8512d79e190072815dbfa21ceef962ecda3b554ea442e2c2af0cd86",
+      "results/confirmatory/dual-bound-force-pbmc-certified-full.raw.csv": "965fb4ace3e3074b5554a535677e43c0e604cbc8673377954a8dd8641ff97f18",
+      "results/confirmatory/dual-bound-force-timing-full.json": "8e95cd113769419f68be9c4210396e8d9700c052b8cbed668c4a3320ceb65bff",
+      "results/confirmatory/dual-bound-force-timing-full.raw.csv": "85f77b4bfbfe3c672edbf14f8ddffc0b833b08fc40d2fb1d20d07dbb57571ae8"
+    }
+  },
+  "results": {
+    "analysis_units": 370,
+    "decision_summary": {
+      "heterogeneous_gate_count_prohibited": true,
+      "supported": [
+        "casewise_noninferiority_5pct",
+        "cellwise_noninferiority_5pct",
+        "clean_noninferiority_5pct",
+        "pbmc_structural_improvement"
+      ],
+      "unsupported": [
+        "structural_out_of_subspace_improvement"
+      ]
+    },
+    "engineering_evidence": {
+      "active_state_growth": {
+        "intercept_bytes": -2.8823987637668013e-11,
+        "passed": true,
+        "qualification": "deterministic byte-accounting consistency check; outside the Holm family",
+        "r_squared": 1.0,
+        "slope_bytes_per_unit": 23.999999999999996,
+        "status": "evaluated"
+      },
+      "calibration_peak_growth": {
+        "intercept_bytes": 25169.459125385292,
+        "passed": true,
+        "qualification": "deterministic peak-envelope consistency check; outside the Holm family",
+        "r_squared": 0.9993875565401654,
+        "slope_bytes_per_unit": 48.852779048368745,
+        "status": "evaluated"
+      },
+      "throughput_70pct": {
+        "qualification": "hardware-qualified paired timing evidence; outside the Holm family",
+        "ratio": 3.2074164694752785,
+        "status": "evaluated",
+        "threshold": 0.7,
+        "threshold_met": true
+      }
+    },
+    "hypotheses": {
+      "casewise_noninferiority_5pct": {
+        "alternative": "less",
+        "degenerate_standard_error": false,
+        "degrees_of_freedom": 29,
+        "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+        "estimand": "equal-weight mean across strong and weak spectra within seed",
+        "estimate": -0.26947180855344166,
+        "historical_percentile_interval_rule_passed": true,
+        "holm_adjusted_one_sided_p": 4.063593559248693e-37,
+        "margin_qualification": "5% is a prospectively selected engineering tolerance in normalized projection error, not a biological or clinical minimum-important difference",
+        "monte_carlo_standard_error": 0.002907376280287824,
+        "multiplier": 1.05,
+        "n_pairs": 30,
+        "one_sided_p": 1.0158983898121732e-37,
+        "paired_t_95": [
+          -0.27541806070271985,
+          -0.2635255564041635
+        ],
+        "passed": true,
+        "percentile_bootstrap_95": [
+          -0.27486933719059875,
+          -0.2636906769234919
+        ],
+        "percentile_bootstrap_resamples": 10000,
+        "sample_standard_deviation": 0.015924355718691035,
+        "scenario": "casewise_cauchy",
+        "status": "evaluated",
+        "t_statistic": -92.68556339971397
+      },
+      "cellwise_noninferiority_5pct": {
+        "alternative": "less",
+        "degenerate_standard_error": false,
+        "degrees_of_freedom": 29,
+        "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+        "estimand": "equal-weight mean across strong and weak spectra within seed",
+        "estimate": -0.13181011156147054,
+        "historical_percentile_interval_rule_passed": true,
+        "holm_adjusted_one_sided_p": 2.648368782384726e-37,
+        "margin_qualification": "5% is a prospectively selected engineering tolerance in normalized projection error, not a biological or clinical minimum-important difference",
+        "monte_carlo_standard_error": 0.0013904401991441135,
+        "multiplier": 1.05,
+        "n_pairs": 30,
+        "one_sided_p": 5.296737564769452e-38,
+        "paired_t_95": [
+          -0.13465388107237297,
+          -0.12896634205056812
+        ],
+        "passed": true,
+        "percentile_bootstrap_95": [
+          -0.13438549463056138,
+          -0.12909081526873242
+        ],
+        "percentile_bootstrap_resamples": 10000,
+        "sample_standard_deviation": 0.007615754619332063,
+        "scenario": "cellwise_cauchy",
+        "status": "evaluated",
+        "t_statistic": -94.79739699888306
+      },
+      "clean_noninferiority_5pct": {
+        "alternative": "less",
+        "degenerate_standard_error": false,
+        "degrees_of_freedom": 29,
+        "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+        "estimand": "equal-weight mean across strong and weak spectra within seed",
+        "estimate": -0.014564396961634954,
+        "historical_percentile_interval_rule_passed": true,
+        "holm_adjusted_one_sided_p": 1.4354512163320956e-10,
+        "margin_qualification": "5% is a prospectively selected engineering tolerance in normalized projection error, not a biological or clinical minimum-important difference",
+        "monte_carlo_standard_error": 0.0015075771470348367,
+        "multiplier": 1.05,
+        "n_pairs": 30,
+        "one_sided_p": 7.177256081660478e-11,
+        "paired_t_95": [
+          -0.017647738430552454,
+          -0.011481055492717454
+        ],
+        "passed": true,
+        "percentile_bootstrap_95": [
+          -0.017510476970073338,
+          -0.011703593600645875
+        ],
+        "percentile_bootstrap_resamples": 10000,
+        "sample_standard_deviation": 0.008257340106102627,
+        "scenario": "clean",
+        "status": "evaluated",
+        "t_statistic": -9.660797120917357
+      },
+      "pbmc_structural_improvement": {
+        "absolute_recovery_qualification": "both normalized projection errors remain near one; the result is a small conditional relative advantage, not satisfactory recovery",
+        "alternative": "less",
+        "degenerate_standard_error": false,
+        "degrees_of_freedom": 9,
+        "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+        "estimand": "mean paired fault-replicate difference on one fixed PBMC matrix",
+        "estimate": -0.01363996922312145,
+        "exact_one_sided_sign_flip_p": 0.0009765625,
+        "exact_one_sided_sign_p": 0.0009765625,
+        "historical_percentile_interval_rule_passed": true,
+        "holm_adjusted_one_sided_p": 2.609336371687527e-13,
+        "mean_dual_error": 0.9697924753667386,
+        "mean_mad_error": 0.98343244458986,
+        "monte_carlo_standard_error": 0.000202115468785806,
+        "multiplier": 1.0,
+        "n_pairs": 10,
+        "one_sided_p": 8.697787905625089e-14,
+        "paired_t_95": [
+          -0.014097186178547579,
+          -0.013182752267695321
+        ],
+        "passed": true,
+        "percentile_bootstrap_95": [
+          -0.013993964691165914,
+          -0.013243456995408782
+        ],
+        "percentile_bootstrap_resamples": 10000,
+        "sample_standard_deviation": 0.0006391452317158137,
+        "scenario": "bounded_out_of_subspace",
+        "status": "evaluated",
+        "t_statistic": -67.48602323742253
+      },
+      "structural_out_of_subspace_improvement": {
+        "alternative": "less",
+        "degenerate_standard_error": false,
+        "degrees_of_freedom": 29,
+        "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+        "estimand": "equal-weight mean across strong and weak spectra within seed",
+        "estimate": 0.016321710119990684,
+        "historical_percentile_interval_rule_passed": false,
+        "holm_adjusted_one_sided_p": 0.9999999999947545,
+        "margin_qualification": "superiority against zero paired difference",
+        "monte_carlo_standard_error": 0.001507088622082919,
+        "multiplier": 1.0,
+        "n_pairs": 30,
+        "one_sided_p": 0.9999999999947545,
+        "paired_t_95": [
+          0.013239367796785768,
+          0.0194040524431956
+        ],
+        "passed": false,
+        "percentile_bootstrap_95": [
+          0.013604195178599916,
+          0.01938236430843022
+        ],
+        "percentile_bootstrap_resamples": 10000,
+        "sample_standard_deviation": 0.008254664344741931,
+        "scenario": "bounded_out_of_subspace",
+        "status": "evaluated",
+        "t_statistic": 10.829960415620917
+      }
+    },
+    "spectrum_interactions": {
+      "casewise_noninferiority_5pct": {
+        "strong": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the strong-eigengap stratum",
+          "estimate": -0.4381444784014369,
+          "historical_percentile_interval_rule_passed": true,
+          "monte_carlo_standard_error": 0.00495485336573186,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 3.955210034910179e-37,
+          "paired_t_95": [
+            -0.4482782913774527,
+            -0.4280106654254211
+          ],
+          "percentile_bootstrap_95": [
+            -0.4474719995074972,
+            -0.4283443521896996
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.027138849575417345,
+          "scenario": "casewise_cauchy",
+          "status": "evaluated",
+          "t_statistic": -88.42733499071379
+        },
+        "weak": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the weak-eigengap stratum",
+          "estimate": -0.10079913870544652,
+          "historical_percentile_interval_rule_passed": true,
+          "monte_carlo_standard_error": 0.0021129099569252613,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 2.0647922740855775e-29,
+          "paired_t_95": [
+            -0.10512052478050739,
+            -0.09647775263038565
+          ],
+          "percentile_bootstrap_95": [
+            -0.10487622091622209,
+            -0.09669782024112358
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.011572884453852345,
+          "scenario": "casewise_cauchy",
+          "status": "evaluated",
+          "t_statistic": -47.70631061445276
+        }
+      },
+      "cellwise_noninferiority_5pct": {
+        "strong": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the strong-eigengap stratum",
+          "estimate": -0.20941376575553977,
+          "historical_percentile_interval_rule_passed": true,
+          "monte_carlo_standard_error": 0.002928602979936026,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 1.8208557017500174e-34,
+          "paired_t_95": [
+            -0.2154034313801431,
+            -0.20342410013093645
+          ],
+          "percentile_bootstrap_95": [
+            -0.21507405763444462,
+            -0.2036195699919894
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.01604061914087811,
+          "scenario": "cellwise_cauchy",
+          "status": "evaluated",
+          "t_statistic": -71.50636914263957
+        },
+        "weak": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the weak-eigengap stratum",
+          "estimate": -0.054206457367401366,
+          "historical_percentile_interval_rule_passed": true,
+          "monte_carlo_standard_error": 0.0007229127981231468,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 4.6280569256445386e-35,
+          "paired_t_95": [
+            -0.05568498005079992,
+            -0.05272793468400281
+          ],
+          "percentile_bootstrap_95": [
+            -0.055571493461597815,
+            -0.052811440261703556
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.003959556466412258,
+          "scenario": "cellwise_cauchy",
+          "status": "evaluated",
+          "t_statistic": -74.98339704060322
+        }
+      },
+      "clean_noninferiority_5pct": {
+        "strong": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the strong-eigengap stratum",
+          "estimate": 0.009012806667955554,
+          "historical_percentile_interval_rule_passed": false,
+          "monte_carlo_standard_error": 0.0027779012793712715,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 0.9985193339680303,
+          "paired_t_95": [
+            0.0033313606284670703,
+            0.014694252707444037
+          ],
+          "percentile_bootstrap_95": [
+            0.003656528992520492,
+            0.014333898503676695
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.015215191932341058,
+          "scenario": "clean",
+          "status": "evaluated",
+          "t_statistic": 3.2444661496377734
+        },
+        "weak": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the weak-eigengap stratum",
+          "estimate": -0.03814160059122544,
+          "historical_percentile_interval_rule_passed": true,
+          "monte_carlo_standard_error": 0.0010960375478001876,
+          "multiplier": 1.05,
+          "n_pairs": 30,
+          "one_sided_p": 1.6629850299362812e-25,
+          "paired_t_95": [
+            -0.040383249072876826,
+            -0.03589995210957406
+          ],
+          "percentile_bootstrap_95": [
+            -0.040243302018880635,
+            -0.03602334857990507
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.006003244888028095,
+          "scenario": "clean",
+          "status": "evaluated",
+          "t_statistic": -34.79953827109107
+        }
+      },
+      "structural_out_of_subspace_improvement": {
+        "strong": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the strong-eigengap stratum",
+          "estimate": 0.03138067049657557,
+          "historical_percentile_interval_rule_passed": false,
+          "monte_carlo_standard_error": 0.002854396026599142,
+          "multiplier": 1.0,
+          "n_pairs": 30,
+          "one_sided_p": 0.9999999999963142,
+          "paired_t_95": [
+            0.0255427751325892,
+            0.03721856586056194
+          ],
+          "percentile_bootstrap_95": [
+            0.026077679661710842,
+            0.037005187984145815
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.015634170918214663,
+          "scenario": "bounded_out_of_subspace",
+          "status": "evaluated",
+          "t_statistic": 10.993804014632103
+        },
+        "weak": {
+          "alternative": "less",
+          "degenerate_standard_error": false,
+          "degrees_of_freedom": 29,
+          "descriptive_interaction_analysis": true,
+          "difference_definition": "DualBound - multiplier * MAD_Sketch; negative favors the declared alternative",
+          "estimand": "mean paired difference within the weak-eigengap stratum",
+          "estimate": 0.0012627497434057554,
+          "historical_percentile_interval_rule_passed": false,
+          "monte_carlo_standard_error": 0.0007634706506664257,
+          "multiplier": 1.0,
+          "n_pairs": 30,
+          "one_sided_p": 0.9455392718845285,
+          "paired_t_95": [
+            -0.0002987230622355603,
+            0.002824222549047071
+          ],
+          "percentile_bootstrap_95": [
+            -0.00018880942055017445,
+            0.002710786629836974
+          ],
+          "percentile_bootstrap_resamples": 10000,
+          "sample_standard_deviation": 0.004181700973631479,
+          "scenario": "bounded_out_of_subspace",
+          "status": "evaluated",
+          "t_statistic": 1.6539597721320578
+        }
+      }
+    }
+  },
+  "schema_version": "1.0",
+  "seeds": [
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    519,
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528,
+    529
+  ],
+  "stage": "post_review_confirmatory_reanalysis",
+  "status": "completed"
+}

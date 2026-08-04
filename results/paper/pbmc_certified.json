@@ -1,0 +1,258 @@
+{
+  "command_line": [
+    "tools/aggregate_pbmc_certified.py"
+  ],
+  "environment": {
+    "cpu_count": 28,
+    "dependency_versions": {
+      "numba": "0.65.1",
+      "numpy": "2.4.6",
+      "psutil": "7.2.2",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.17.1"
+    },
+    "machine": "x86_64",
+    "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "thread_environment": {
+      "MKL_NUM_THREADS": null,
+      "NUMEXPR_NUM_THREADS": null,
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null
+    }
+  },
+  "evidence_label": "confirmatory_pbmc_reference_correction_disclosed_post_run",
+  "experiment": "dual_bound_force_pbmc_certified_reference",
+  "generated_at_utc": "2026-08-03T14:31:42.696082+00:00",
+  "parameters": {
+    "amendment": "The numerical PBMC reference gate was strengthened after an independent statistical audit. Estimator parameters and seeds were unchanged; the earlier loose-reference bundle is retained.",
+    "configuration": {
+      "calibration_size": 512,
+      "confirmatory_seeds": [
+        500,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        510,
+        511,
+        512,
+        513,
+        514,
+        515,
+        516,
+        517,
+        518,
+        519,
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526,
+        527,
+        528,
+        529
+      ],
+      "development_seeds": [
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309
+      ],
+      "estimator": "DualBoundFORCE",
+      "feasible_configuration_exists": true,
+      "frozen_at_utc": "2026-08-02T14:08:37.153788+00:00",
+      "marginal_lambda": 3.0,
+      "parallel_lambda": 4.0,
+      "prohibition": "Do not change after inspecting confirmatory outcomes.",
+      "residual_lambda": 1.5,
+      "schema_version": "1.0",
+      "selection_rule": "minimize worst contaminated-scenario mean paired subspace-error ratio; require clean point-estimate noninferiority within 5% and median throughput at least 70% of MAD Sketch-FORCE",
+      "smoke_only": false
+    },
+    "methods": [
+      "sketch_mad",
+      "dual_bound"
+    ],
+    "scenario": "bounded_out_of_subspace"
+  },
+  "preprocessing": {
+    "library_size_target": 10000.0,
+    "orientation": "cells_by_genes",
+    "reference_svd": {
+      "array_sha256": "077793e262785f3b6d78cef2fc97c8c9fbbe46aac79330d29f8bf70f47c6e127",
+      "created_at_utc": "2026-08-03T14:18:13.053833+00:00",
+      "diagnostics": {
+        "certified": true,
+        "cross_start_normalized_subspace_change": 3.4098239607388707e-06,
+        "estimated_next_singular_value": 481.7901081296464,
+        "estimated_rank_gap": 5.609721348725259,
+        "estimated_rank_singular_value": 487.39982947837166,
+        "maximum_orthogonality_error": 9.442518163348547e-15,
+        "maximum_principal_sine_between_starts": 1.291247310047833e-05,
+        "maximum_relative_ritz_residual": 2.665596954990168e-06,
+        "starts": [
+          {
+            "converged": true,
+            "convergence_tolerance": 1e-06,
+            "last_iteration_subspace_change": 9.040369181694669e-07,
+            "orthogonality_error": 6.33609746852704e-15,
+            "oversamples": 20.0,
+            "power_iterations": 48.0,
+            "rayleigh_ritz_orthogonality_error": 9.442518163348547e-15,
+            "relative_ritz_residual": 2.665596954990168e-06,
+            "ritz_residual_frobenius_norm": 0.0015757566656307998,
+            "ritz_residual_spectral_norm": 0.0012992115013202746,
+            "seed": 49001
+          },
+          {
+            "converged": true,
+            "convergence_tolerance": 1e-06,
+            "last_iteration_subspace_change": 8.872315622863528e-07,
+            "orthogonality_error": 6.919171908024535e-15,
+            "oversamples": 20.0,
+            "power_iterations": 49.0,
+            "rayleigh_ritz_orthogonality_error": 9.016016544128196e-15,
+            "relative_ritz_residual": 2.6372787556554996e-06,
+            "ritz_residual_frobenius_norm": 0.0015497056772680678,
+            "ritz_residual_spectral_norm": 0.001285409215792209,
+            "seed": 49002
+          }
+        ]
+      },
+      "mode": "checksummed_two_start_rayleigh_ritz_certified_cache",
+      "parameters": {
+        "algorithm": "two_start_block_power_rayleigh_ritz_v2",
+        "audit_rank": 21,
+        "centering": "implicit_column_mean",
+        "convergence_tolerance": 1e-06,
+        "cross_start_tolerance": 0.0001,
+        "maximum_power_iterations": 160,
+        "minimum_power_iterations": 20,
+        "oversamples": 20,
+        "rank": 20,
+        "relative_residual_tolerance": 0.0001,
+        "scaling": "validated_prepared_feature_scales",
+        "seeds": [
+          49001,
+          49002
+        ]
+      },
+      "selected_gene_sha256": "9a7f9efaf60d8b84dce46b8e9c47d66837817406a7c601eb08e48e17fa4cea09",
+      "source_features_sha256": "81532973c69a72f6c22e3005d15ef9e759485c132806155738bc65af0c021b68",
+      "source_matrix_sha256": "68186fec380a3c42dbd6ce7728e7ff750335119754587f4a3b6a96b2c010e6d1",
+      "validated_at_utc": "2026-08-03T14:18:13.053833+00:00"
+    },
+    "selected_gene_count": 10000,
+    "selection": "top_dispersion_nonconstant_genes",
+    "tie_break": "ascending_gene_identifier",
+    "top_genes": 10000,
+    "transform": "log1p"
+  },
+  "provenance": {
+    "prepared": {
+      "features_sha256": "81532973c69a72f6c22e3005d15ef9e759485c132806155738bc65af0c021b68",
+      "matrix_sha256": "68186fec380a3c42dbd6ce7728e7ff750335119754587f4a3b6a96b2c010e6d1",
+      "nnz": 3834525,
+      "preprocessing": {
+        "library_size_target": 10000.0,
+        "orientation": "cells_by_genes",
+        "selection": "top_dispersion_nonconstant_genes",
+        "tie_break": "ascending_gene_identifier",
+        "top_genes": 10000,
+        "transform": "log1p"
+      },
+      "selected_gene_sha256": "9a7f9efaf60d8b84dce46b8e9c47d66837817406a7c601eb08e48e17fa4cea09",
+      "shape": [
+        68579,
+        10000
+      ],
+      "source_archive_sha256": "3f35f37ff344bc9b32f97cd003ac986ebb9b5d7f31006c53dff4cb38da267931",
+      "validated_at_utc": "2026-08-02T08:10:47.723943+00:00"
+    },
+    "raw": {
+      "archive_sha256": "3f35f37ff344bc9b32f97cd003ac986ebb9b5d7f31006c53dff4cb38da267931",
+      "barcodes_sha256": "454fb1626a376c6ab59810bb601ea0da734ef7b62dfc14d2ef982ab50516111a",
+      "cell_count": 68579,
+      "dataset_page_url": "https://www.10xgenomics.com/datasets/fresh-68-k-pbm-cs-donor-a-1-standard-1-1-0",
+      "feature_count": 32738,
+      "genes_sha256": "8778dd78085086be6dcafa8334f95f7cf76b25526e8ef2b63186db5127a1492c",
+      "license": "CC BY 4.0",
+      "matrix_sha256": "beff642fbdd624c79c364bfa22f27340125e6b8768cfed8e72c6321bfb25c5e1",
+      "matrix_shape": [
+        32738,
+        68579
+      ],
+      "retrieved_at_utc": "2026-08-02T08:10:21.724337+00:00",
+      "source_url": "https://cf.10xgenomics.com/samples/cell-exp/1.1.0/fresh_68k_pbmc_donor_a/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz",
+      "validated_at_utc": "2026-08-02T08:10:24.142272+00:00"
+    }
+  },
+  "results": {
+    "primary_criterion": {
+      "difference_definition": "DualBound - MAD_Sketch",
+      "estimate": -0.01363996922312145,
+      "exact_one_sided_sign_flip_p": 0.0009765625,
+      "exact_one_sided_sign_p": 0.0009765625,
+      "expected_direction": "upper_95_below_zero",
+      "favorable_differences": 10,
+      "maximum_basis_metric_recomputation_difference": 3.419486915845482e-14,
+      "nonzero_differences": 10,
+      "paired_t_95": [
+        -0.014097186178547579,
+        -0.013182752267695321
+      ],
+      "passed_preregistered_interval_rule": true,
+      "percentile_bootstrap_95": [
+        -0.014003021478283395,
+        -0.013252554964750663
+      ],
+      "percentile_bootstrap_resamples": 10000,
+      "sample_standard_deviation": 0.0006391452317158137,
+      "standard_error": 0.000202115468785806,
+      "status": "evaluated_against_certified_reference"
+    },
+    "records": 20,
+    "retained_basis_files": 20,
+    "shards": [
+      "results/pbmc-certified-rerun/seed500/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed501/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed502/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed503/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed504/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed505/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed506/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed507/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed508/dual-bound-force-pbmc-full.json",
+      "results/pbmc-certified-rerun/seed509/dual-bound-force-pbmc-full.json"
+    ]
+  },
+  "schema_version": "1.0",
+  "seeds": [
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509
+  ],
+  "stage": "confirmatory_reference_correction",
+  "status": "completed"
+}
