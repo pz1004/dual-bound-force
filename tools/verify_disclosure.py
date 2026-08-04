@@ -31,7 +31,7 @@ def strict_json(path: Path) -> Any:
 def is_ephemeral(path: Path) -> bool:
     relative = path.relative_to(ROOT)
     return any(
-        part in {"__pycache__", ".pytest_cache", "build", "dist"}
+        part in {"__pycache__", ".pytest_cache", ".git", "build", "dist"}
         or part.endswith(".egg-info")
         for part in relative.parts
     )
