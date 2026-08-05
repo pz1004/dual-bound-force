@@ -1,0 +1,170 @@
+{
+  "distribution": {
+    "files": [
+      {
+        "bytes": 1086,
+        "path": "LICENSE",
+        "sha256": "918b2d4556e5cf946a9017811dc1bd9494e95130ebaae616ec360a493a2a8812"
+      },
+      {
+        "bytes": 2319,
+        "path": "README.md",
+        "sha256": "c8993c038b8f4e64fa82214be48b48da8e2afbfb74ff7862cfafe980d9b40f1d"
+      },
+      {
+        "bytes": 576,
+        "path": "THIRD_PARTY_NOTICES.md",
+        "sha256": "00d04b433fe51f5814ab1e3c8155a6fb38de570638da7549c9167e2691947301"
+      },
+      {
+        "bytes": 1480,
+        "path": "pyproject.toml",
+        "sha256": "1247f1a8e7cb27e61294379b06752b1c44b987878722a982de53c36400aade22"
+      },
+      {
+        "bytes": 2975,
+        "path": "tools/build_implementation_manifest.py",
+        "sha256": "5d5b2d12281f643ae55b9a903cbb918c61a9d5052916f61cc080aae23bc8afb8"
+      },
+      {
+        "bytes": 12754,
+        "path": "tools/generate_paper_assets.py",
+        "sha256": "861854d589629245e4d0981d1c7d9d61a68208f51866b8c83f302a9a7a3db0a4"
+      },
+      {
+        "bytes": 4680,
+        "path": "tools/verify_disclosure.py",
+        "sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d"
+      }
+    ],
+    "scope": "public packaging, MIT licensing, documentation, and verification tools",
+    "source_tree_sha256": "fa803a68aee59afd1ccbcb8b51de983fa50e648116ea759ce3af337d421b115d"
+  },
+  "historical_result_manifest": {
+    "qualification": "immutable private scientific provenance for frozen paper results",
+    "sha256": "d69c9597fbd51fa20a870f22ceeec0e55fc7b300eb30c93fe34ffede2bed51d1"
+  },
+  "package_version": "0.1.0",
+  "schema_version": "2.0",
+  "scientific": {
+    "files": [
+      {
+        "bytes": 983,
+        "path": "preregistration/frozen_configuration.json",
+        "sha256": "df6bb99cccfbec648dc5547832e8129bfe5389cdee76ba14db7a036782e2d101"
+      },
+      {
+        "bytes": 92,
+        "path": "preregistration/frozen_configuration.json.sha256",
+        "sha256": "9d942631fa81eb8bbb62f0cc61361b046f35556dab5aca9d042a223aa7b42582"
+      },
+      {
+        "bytes": 233,
+        "path": "requirements.lock",
+        "sha256": "e4ae1381338390ceecaeddba72b43a19020b77f284eb42b12d3735308d7ef420"
+      },
+      {
+        "bytes": 160,
+        "path": "src/dual_bound_force/__init__.py",
+        "sha256": "ada28b41807937f0820cf9e56ead47aaad370513c55acc1e132061edcfdfa7eb"
+      },
+      {
+        "bytes": 2900,
+        "path": "src/dual_bound_force/_fd.py",
+        "sha256": "0cef7e2c6d42dc12c02b0ff949f3f4e88cf549106300a177894e2d97e702327b"
+      },
+      {
+        "bytes": 21057,
+        "path": "src/dual_bound_force/estimator.py",
+        "sha256": "c48b7e5ea7d9c6eaf3c7e5c8619a6fa93b73c261dfff951170e58b27e15220f3"
+      },
+      {
+        "bytes": 709,
+        "path": "src/dual_bound_force/experiments/__init__.py",
+        "sha256": "8f49dbce1e9e79f5afc2880ba836ee95b3bd8d6cdb2d716997eee0a0be528025"
+      },
+      {
+        "bytes": 1689,
+        "path": "src/dual_bound_force/experiments/audit_cli.py",
+        "sha256": "292ed985ea08454ff8d68463c76aa64d47ab8d8c3bd89ed09ee02ad1dd4bcbf4"
+      },
+      {
+        "bytes": 5285,
+        "path": "src/dual_bound_force/experiments/baseline_registry.py",
+        "sha256": "a6fc8fc01459f14eb303c4f64258d7350c733ebfd5fda9ff8dfa5fdc8ddc4075"
+      },
+      {
+        "bytes": 2137,
+        "path": "src/dual_bound_force/experiments/baseline_sources.json",
+        "sha256": "ef25653ab9eb17b7413844594e0fdd4c20b5cde3c670bad842a84b9859020590"
+      },
+      {
+        "bytes": 10882,
+        "path": "src/dual_bound_force/experiments/baselines.py",
+        "sha256": "95820b42e2028919b4dacabb4526b52f2b9a68e87687a16143bbeb2e8c7f90b2"
+      },
+      {
+        "bytes": 7904,
+        "path": "src/dual_bound_force/experiments/cli.py",
+        "sha256": "8a4ea5819c89a3efc8802932616d4478c6c0bf5a2c776dc315bdb33556f99217"
+      },
+      {
+        "bytes": 27339,
+        "path": "src/dual_bound_force/experiments/external.py",
+        "sha256": "afac4a5500e0d4fd7efe69cc29ffc5cbfa2a5c5e4fdfe2c08753fa0b8ce89688"
+      },
+      {
+        "bytes": 20355,
+        "path": "src/dual_bound_force/experiments/external_cli.py",
+        "sha256": "078583e94f19a377f446d790c461c01a2cc064cfc799b5636b467ae2ee388229"
+      },
+      {
+        "bytes": 11217,
+        "path": "src/dual_bound_force/experiments/metrics.py",
+        "sha256": "9d0c1ad5fe1871a73ac2e326ef28f36fc6573b9234d195bd01d70a8d0541e637"
+      },
+      {
+        "bytes": 6606,
+        "path": "src/dual_bound_force/experiments/native_baselines.py",
+        "sha256": "b7c8b047f13e3c158f4eb340550b1d62d56e96e30fe8068917d0a93cac737348"
+      },
+      {
+        "bytes": 7777,
+        "path": "src/dual_bound_force/experiments/outlier_pursuit.py",
+        "sha256": "97d5362986e3cb9a267ac241dc1937da45c609050a96613a1c78fb6a182c0850"
+      },
+      {
+        "bytes": 6564,
+        "path": "src/dual_bound_force/experiments/reporting.py",
+        "sha256": "ece2c08686bff5d5b5c71853e8cfdae24ffbf41e4d4045f70d89edf4b3392249"
+      },
+      {
+        "bytes": 8575,
+        "path": "src/dual_bound_force/experiments/scenarios.py",
+        "sha256": "f3903b274db0bdf52f0cf93a67ddbfbe1d97a7d187cbd68b5486b82eabd28bb2"
+      },
+      {
+        "bytes": 19909,
+        "path": "src/dual_bound_force/experiments/structural_ceiling_cli.py",
+        "sha256": "000875f664b5363089afab4aca3aeb1275b8e58d76a049608da49a71b4576553"
+      },
+      {
+        "bytes": 34783,
+        "path": "src/dual_bound_force/experiments/study.py",
+        "sha256": "b3e13fc656a1c5b8d202cb972407dfed10d009a2d8dcfc820d1d971043f6ec4d"
+      },
+      {
+        "bytes": 11457,
+        "path": "src/dual_bound_force/experiments/timing_cli.py",
+        "sha256": "85ffa68e9804a6bcf501e45487a85993b8e32c3fbd3a5225688a7f0611989c64"
+      },
+      {
+        "bytes": 14099,
+        "path": "src/dual_bound_force/theory.py",
+        "sha256": "8078940ae863f63728b103dd0f81ba47c6e5f77bbe44d8ecddf2781e2d64befb"
+      }
+    ],
+    "scope": "public current scientific code, frozen configuration, and runtime lock",
+    "source_tree_sha256": "8021fe91f20c790677554c98e9cf16a88f05d298bfe8288c321d7837e569eb01"
+  }
+}

@@ -72,6 +72,29 @@ def test_initial_calibration_is_excluded_and_exact_mad_is_floored():
     assert estimator.get_diagnostics()["effective_n"] == 1
 
 
+def test_transform_is_available_immediately_after_initial_calibration():
+    rng = np.random.default_rng(1001)
+    estimator = DualBoundFORCE(6, 2, calibration_size=12).fit(
+        rng.normal(size=(12, 6))
+    )
+    before = copy.deepcopy(estimator.get_diagnostics())
+    query = rng.normal(size=6)
+    transformed = estimator.transform(query)
+    expected = estimator._transform_with(
+        query,
+        location=estimator.location,
+        scale=estimator.scale,
+        basis=estimator.basis,
+        parallel_radius=estimator.parallel_radius,
+        residual_radius=estimator.residual_radius,
+        count_diagnostics=False,
+    )
+    assert np.array_equal(transformed, expected)
+    assert estimator.get_diagnostics() == before
+    with pytest.raises(NotFittedError):
+        estimator.get_correlation()
+
+
 def test_calibration_basis_and_dual_radii_match_independent_construction():
     rng = np.random.default_rng(101)
     calibration = rng.normal(size=(24, 11))

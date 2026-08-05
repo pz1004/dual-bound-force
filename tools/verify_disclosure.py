@@ -31,7 +31,7 @@ def strict_json(path: Path) -> Any:
 def is_ephemeral(path: Path) -> bool:
     relative = path.relative_to(ROOT)
     return any(
-        part in {"__pycache__", ".pytest_cache", "build", "dist"}
+        part in {"__pycache__", ".pytest_cache", ".git", "build", "dist"}
         or part.endswith(".egg-info")
         for part in relative.parts
     )
@@ -92,6 +92,16 @@ def main() -> None:
         raise RuntimeError("disclosure license is not MIT")
     if manifest.get("repository") != "https://github.com/pz1004/dual-bound-force":
         raise RuntimeError("unexpected disclosure repository URL")
+    current = strict_json(ROOT / "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json")
+    if current.get("schema_version") != "2.0":
+        raise RuntimeError("unexpected current implementation-manifest schema")
+    for scope in ("scientific", "distribution"):
+        for record in current[scope]["files"]:
+            source = ROOT / record["path"]
+            if not source.is_file() or sha256(source) != record["sha256"]:
+                raise RuntimeError(
+                    f"current {scope} implementation hash mismatch for {record['path']}"
+                )
     print(
         json.dumps(
             {

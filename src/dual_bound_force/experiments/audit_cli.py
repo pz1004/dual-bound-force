@@ -7,6 +7,7 @@ import csv
 import json
 from pathlib import Path
 
+from .baseline_registry import baseline_manifest, validate_baseline_source
 from .study import load_frozen_configuration
 
 
@@ -18,7 +19,14 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="+")
     parser.add_argument("--configuration")
+    parser.add_argument(
+        "--baseline-dir",
+        help="validate every exact external baseline source under this directory",
+    )
     args = parser.parse_args(argv)
+    if args.baseline_dir:
+        for project in baseline_manifest()["projects"]:
+            validate_baseline_source(project, args.baseline_dir)
     if args.configuration:
         load_frozen_configuration(args.configuration)
     for raw in args.paths:

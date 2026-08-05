@@ -35,10 +35,15 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", choices=("development", "confirmatory"), required=True)
     parser.add_argument("--tiers", default="dense,sketch,calibration,epoch")
+    parser.add_argument("--methods", help="comma-separated method subset for confirmatory synthetic tiers")
     parser.add_argument("--seeds")
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--data-dir", default="data")
+    parser.add_argument(
+        "--baseline-dir",
+        help="directory containing hash-validated force/, mad-force/, and sketch-force/ source trees",
+    )
     parser.add_argument("--output-dir", default="results/confirmatory")
     parser.add_argument("--configuration", default="preregistration/frozen_configuration.json")
     parser.add_argument("--bootstrap-resamples", type=int, default=10_000)
@@ -58,7 +63,9 @@ def run(args: argparse.Namespace) -> tuple[dict, list[dict]]:
         raise ValueError(f"--tiers must be drawn from {sorted(permitted)}")
     if args.stage == "development":
         seeds = _seeds(args.seeds, (300, 301) if args.smoke else DEVELOPMENT_SEEDS)
-        records, selection = run_development(seeds=seeds, smoke=args.smoke)
+        records, selection = run_development(
+            seeds=seeds, smoke=args.smoke, baseline_dir=args.baseline_dir
+        )
         frozen = None
         if not args.smoke:
             frozen = write_frozen_configuration(
@@ -96,12 +103,19 @@ def run(args: argparse.Namespace) -> tuple[dict, list[dict]]:
         }
     else:
         configuration = load_frozen_configuration(args.configuration)
+    method_subset = (
+        tuple(item.strip() for item in args.methods.split(",") if item.strip())
+        if args.methods
+        else None
+    )
     records = run_confirmatory_synthetic(
         seeds=seeds,
         configuration=configuration,
         tiers=tiers,
         smoke=args.smoke,
         jobs=args.jobs,
+        baseline_dir=args.baseline_dir,
+        methods=method_subset,
     )
     if "calibration" in tiers:
         records.extend(
@@ -109,6 +123,7 @@ def run(args: argparse.Namespace) -> tuple[dict, list[dict]]:
                 seeds=seeds,
                 configuration=configuration,
                 smoke=args.smoke,
+                baseline_dir=args.baseline_dir,
             )
         )
     if "epoch" in tiers:
@@ -117,6 +132,7 @@ def run(args: argparse.Namespace) -> tuple[dict, list[dict]]:
                 seeds=seeds,
                 configuration=configuration,
                 smoke=args.smoke,
+                baseline_dir=args.baseline_dir,
             )
         )
     primary_criteria = (
@@ -128,10 +144,13 @@ def run(args: argparse.Namespace) -> tuple[dict, list[dict]]:
                 else args.bootstrap_resamples
             ),
         )
-        if set(tiers) & {"dense", "sketch"}
+        if set(tiers) & {"dense", "sketch"} and method_subset is None
         else {
             "status": "not_evaluated",
-            "reason": "separate ablation/sensitivity artifacts do not re-test primary gates",
+            "reason": (
+                "a method subset or separate ablation/sensitivity artifact does not "
+                "re-test the complete primary comparisons"
+            ),
         }
     )
     results = {

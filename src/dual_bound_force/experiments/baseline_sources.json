@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "qualification": "Exact source identities used by the frozen FORCE-family comparisons; the listed public commits do not contain these complete generating revisions.",
+  "projects": {
+    "force": {
+      "directory": "force",
+      "repository": "https://github.com/pz1004/force",
+      "public_commit": "36c2caebdda08775dd0a8da72aad19a6f2431956",
+      "public_commit_matches_generating_source": false,
+      "required_files": {
+        "src/force/core.py": "95bd1cf9d7d1e3f1982634b99e85d7b91619b95ef8fdc1d05242cd6f05e7edbd"
+      }
+    },
+    "mad_force": {
+      "directory": "mad-force",
+      "repository": "https://github.com/pz1004/mad-force-public",
+      "public_commit": "7ddcd9ded065f0eb79e05ffcd3b573763b9eca6a",
+      "public_commit_matches_generating_source": false,
+      "required_files": {
+        "src/adwin.py": "47fd009b95a4b533d9fe27f78c58eeced97ec576ca2b022ed8aa02e0d39ab1e6",
+        "src/common.py": "e65a73c025b6f284443aa8a7bb0cbc063df5b2b1ebe095c8c2c61dda462f4b0a",
+        "src/drift_mad_force.py": "9cd6941c49ccf77c6ccfd3c6cde7d3a66df3e7dafaa485bf2eefb89231fb215e",
+        "src/force.py": "61fe012c15a35b0b449d93979d48fb0622b3c07303ce921d298a2424a870f816",
+        "src/p2.py": "96fc843663b846e7ebb6f19f25e269db54fe52e7bfe7d14332c5e6ce314c3a59",
+        "src/streaming_mad.py": "30695fba53228341a5a438299df1c972714f4482762a45a7a0ae771cd94b565e",
+        "src/ter.py": "fb6995c4d6f91d7ba4bdbb33986d58838399c06cbe2d5fb0cf06a8aa4f18c453"
+      }
+    },
+    "sketch_force": {
+      "directory": "sketch-force",
+      "repository": "https://github.com/pz1004/sketch-force",
+      "public_commit": "50392ce88917ce4a822cc30858b703ba7804a289",
+      "public_commit_matches_generating_source": false,
+      "required_files": {
+        "src/sketch_force/p2_tracker.py": "8b06ce216afbd309b973bd469eabbdf258806140242fb0d4099f4c858f07ea8c",
+        "src/sketch_force/research_baselines.py": "f2ef7dba61b97722ff0a5904ff6d0d4ad468a573b4c8a35c3223e382c2d5a3a8",
+        "src/sketch_force/sketch_force.py": "cd8fff5581f92c1b38eb0ab4c55fecbb7dda90158a9cb05cca31ba4af0737a8d"
+      }
+    }
+  }
+}

@@ -60,8 +60,8 @@ def _record_base(*, seed: int, spectrum: str, scenario: str, method: str) -> dic
     }
 
 
-def _run_task(task: tuple[int, str, str, bool]) -> list[dict[str, Any]]:
-    seed, spectrum, scenario, smoke = task
+def _run_task(task: tuple[int, str, str, bool, str | None]) -> list[dict[str, Any]]:
+    seed, spectrum, scenario, smoke, baseline_dir = task
     dimensions = _dimensions(smoke)
     stream = generate_paired_stream(
         seed=seed,
@@ -93,6 +93,7 @@ def _run_task(task: tuple[int, str, str, bool]) -> list[dict[str, Any]]:
                 marginal_lambda=3.0,
                 parallel_lambda=4.0,
                 residual_lambda=1.5,
+                baseline_dir=baseline_dir,
             )
             base.update(
                 {
@@ -385,11 +386,13 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def run(*, seeds: tuple[int, ...], smoke: bool, jobs: int) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def run(
+    *, seeds: tuple[int, ...], smoke: bool, jobs: int, baseline_dir: str | None = None
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     if jobs <= 0:
         raise ValueError("jobs must be positive")
     tasks = [
-        (seed, spectrum, scenario, smoke)
+        (seed, spectrum, scenario, smoke, baseline_dir)
         for seed in seeds
         for spectrum in SPECTRA
         for scenario in SCENARIOS
@@ -452,6 +455,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--jobs", type=int, default=min(4, os.cpu_count() or 1))
     parser.add_argument("--output-dir", default="results/structural-ceiling")
+    parser.add_argument(
+        "--baseline-dir",
+        help="directory containing hash-validated external baseline source trees",
+    )
     return parser
 
 
@@ -461,7 +468,12 @@ def main(argv: list[str] | None = None) -> None:
     stem = f"dual-bound-force-structural-ceiling-{'smoke' if args.smoke else 'full'}"
     try:
         seeds = _parse_seeds(args.seeds, smoke=args.smoke)
-        payload, records = run(seeds=seeds, smoke=args.smoke, jobs=args.jobs)
+        payload, records = run(
+            seeds=seeds,
+            smoke=args.smoke,
+            jobs=args.jobs,
+            baseline_dir=args.baseline_dir,
+        )
     except Exception as exc:
         payload = envelope(
             experiment="dual_bound_force_structural_ceiling",

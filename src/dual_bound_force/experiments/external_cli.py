@@ -13,11 +13,11 @@ import numpy as np
 from scipy.sparse.linalg import LinearOperator, eigsh
 
 from dual_bound_force import DualBoundFORCE
-from sketch_force.research_baselines import (
+from .baseline_registry import sketch_force_estimator_class
+from .native_baselines import (
     FrequentDirectionsCovariance,
     RobustFrequentDirectionsCovariance,
 )
-from sketch_force import SketchFORCE
 
 from .external import (
     ExternalDataUnavailable,
@@ -113,6 +113,7 @@ def _fit_pbmc_method(
     calibration_size: int,
     parallel_lambda: float,
     residual_lambda: float,
+    baseline_dir: str | None = None,
     basis_output_dir: Path | None = None,
 ) -> dict[str, Any]:
     import time
@@ -145,6 +146,7 @@ def _fit_pbmc_method(
     elif method == "rfd":
         estimator = RobustFrequentDirectionsCovariance(p, k)
     elif method == "sketch_mad":
+        SketchFORCE = sketch_force_estimator_class(baseline_dir)
         estimator = SketchFORCE(p, k, lam=3.0, trim_mode="mad")
     elif method == "dual_bound":
         estimator = DualBoundFORCE(
@@ -243,7 +245,7 @@ def run_pbmc(args: argparse.Namespace, configuration: dict[str, Any]) -> tuple[l
         _, _, right = np.linalg.svd(standardized, full_matrices=False)
         reference_basis = right[:5].T
         reference_diagnostics = {"mode": "dense_smoke_fixture"}
-        methods = ("vanilla_fd", "sketch_mad", "dual_bound")
+        default_methods = ("vanilla_fd", "sketch_mad", "dual_bound")
         scenarios = ("clean", "bounded_out_of_subspace")
         k = 10
         calibration_size = 64
@@ -260,14 +262,18 @@ def run_pbmc(args: argparse.Namespace, configuration: dict[str, Any]) -> tuple[l
         }
         default_methods = ("vanilla_fd", "rfd", "sketch_mad", "dual_bound")
         default_scenarios = ("clean", "casewise", "cellwise", "bounded_out_of_subspace", "in_subspace")
-        methods = tuple(item.strip() for item in args.methods.split(",") if item.strip()) if args.methods else default_methods
         scenarios = tuple(item.strip() for item in args.scenarios.split(",") if item.strip()) if args.scenarios else default_scenarios
-        if not methods or not set(methods) <= set(default_methods):
-            raise ValueError(f"PBMC methods must be drawn from {default_methods}")
         if not scenarios or not set(scenarios) <= set(default_scenarios):
             raise ValueError(f"PBMC scenarios must be drawn from {default_scenarios}")
         k = 50
         calibration_size = 512
+    methods = (
+        tuple(item.strip() for item in args.methods.split(",") if item.strip())
+        if args.methods
+        else default_methods
+    )
+    if not methods or not set(methods) <= set(default_methods):
+        raise ValueError(f"PBMC methods must be drawn from {default_methods}")
     records = []
     for seed in seeds:
         for scenario in scenarios:
@@ -285,6 +291,7 @@ def run_pbmc(args: argparse.Namespace, configuration: dict[str, Any]) -> tuple[l
                         calibration_size=calibration_size,
                         parallel_lambda=float(configuration["parallel_lambda"]),
                         residual_lambda=float(configuration["residual_lambda"]),
+                        baseline_dir=args.baseline_dir,
                         basis_output_dir=Path(args.output_dir) / "bases",
                     )
                 )
@@ -376,6 +383,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--data-dir", default="data")
+    parser.add_argument(
+        "--baseline-dir",
+        help="directory containing hash-validated external baseline source trees",
+    )
     parser.add_argument("--output-dir", default="results/confirmatory")
     parser.add_argument("--configuration", default="preregistration/frozen_configuration.json")
     parser.add_argument("--timeout-seconds", type=float, default=3600.0)

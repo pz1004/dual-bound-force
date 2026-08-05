@@ -80,6 +80,7 @@ def _method_record(
     residual_lambda: float,
     marginal_lambda: float = 3.0,
     k: int | None = None,
+    baseline_dir: str | None = None,
 ) -> dict[str, Any]:
     used_k = dimensions.k if k is None else int(k)
     reference_correlation, reference_basis = _reference(stream)
@@ -92,6 +93,7 @@ def _method_record(
         marginal_lambda=marginal_lambda,
         parallel_lambda=parallel_lambda,
         residual_lambda=residual_lambda,
+        baseline_dir=baseline_dir,
     )
     transformed_error = None
     if fit.transformed_target is not None:
@@ -171,7 +173,7 @@ def _method_record(
 
 
 def run_development(
-    *, seeds: Sequence[int], smoke: bool
+    *, seeds: Sequence[int], smoke: bool, baseline_dir: str | None = None
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     dimensions = SMOKE_DENSE if smoke else FULL_DENSE
     scenarios = ("clean", "casewise_cauchy", "cellwise_cauchy", "bounded_out_of_subspace")
@@ -202,6 +204,7 @@ def run_development(
                         dimensions=dimensions,
                         parallel_lambda=3.0,
                         residual_lambda=3.0,
+                        baseline_dir=baseline_dir,
                     )
                 )
             for parallel_lambda in grid:
@@ -216,6 +219,7 @@ def run_development(
                                 dimensions=dimensions,
                                 parallel_lambda=parallel_lambda,
                                 residual_lambda=residual_lambda,
+                                baseline_dir=baseline_dir,
                             )
                         )
     selection = select_configuration(records, grid=grid)
@@ -360,6 +364,8 @@ def run_confirmatory_synthetic(
     tiers: Sequence[str],
     smoke: bool,
     jobs: int = 1,
+    baseline_dir: str | None = None,
+    methods: Sequence[str] | None = None,
 ) -> list[dict[str, Any]]:
     if jobs <= 0:
         raise ValueError("jobs must be positive")
@@ -371,7 +377,7 @@ def run_confirmatory_synthetic(
     tasks: list[dict[str, Any]] = []
     if "dense" in tiers:
         dimensions = SMOKE_DENSE if smoke else FULL_DENSE
-        methods = ("pearson", "sketch_mad", "dual_bound") if smoke else PRIMARY_DENSE_METHODS
+        task_methods = ("pearson", "sketch_mad", "dual_bound") if smoke else PRIMARY_DENSE_METHODS
         for seed in seeds:
             for spectrum in spectra:
                 for scenario in scenarios:
@@ -382,16 +388,17 @@ def run_confirmatory_synthetic(
                             "scenario": scenario,
                             "tier": "dense",
                             "dimensions": dimensions,
-                            "methods": methods,
+                            "methods": task_methods,
                             "k_values": (dimensions.k,),
                             "parallel_lambda": parallel_lambda,
                             "residual_lambda": residual_lambda,
                             "marginal_lambda": 3.0,
+                            "baseline_dir": baseline_dir,
                         }
                     )
     if "sketch" in tiers:
         dimensions = SMOKE_SKETCH if smoke else FULL_SKETCH
-        methods = ("vanilla_fd", "sketch_mad", "dual_bound") if smoke else PRIMARY_SKETCH_METHODS
+        task_methods = ("vanilla_fd", "sketch_mad", "dual_bound") if smoke else PRIMARY_SKETCH_METHODS
         k_values = (dimensions.k,) if smoke else (10, 20, 40)
         for seed in seeds:
             for spectrum in spectra:
@@ -403,11 +410,12 @@ def run_confirmatory_synthetic(
                             "scenario": scenario,
                             "tier": "sketch",
                             "dimensions": dimensions,
-                            "methods": methods,
+                            "methods": task_methods,
                             "k_values": k_values,
                             "parallel_lambda": parallel_lambda,
                             "residual_lambda": residual_lambda,
                             "marginal_lambda": 3.0,
+                            "baseline_dir": baseline_dir,
                         }
                     )
     if "oracle" in tiers:
@@ -428,6 +436,7 @@ def run_confirmatory_synthetic(
                             "parallel_lambda": parallel_lambda,
                             "residual_lambda": residual_lambda,
                             "marginal_lambda": 3.0,
+                            "baseline_dir": baseline_dir,
                         }
                     )
     if "threshold" in tiers:
@@ -449,6 +458,7 @@ def run_confirmatory_synthetic(
                                 "parallel_lambda": parallel_lambda,
                                 "residual_lambda": residual_lambda,
                                 "marginal_lambda": marginal_lambda,
+                                "baseline_dir": baseline_dir,
                             }
                         )
     if "retention" in tiers:
@@ -468,8 +478,24 @@ def run_confirmatory_synthetic(
                             "parallel_lambda": parallel_lambda,
                             "residual_lambda": residual_lambda,
                             "marginal_lambda": 3.0,
+                            "baseline_dir": baseline_dir,
                         }
                     )
+    if methods is not None:
+        requested = set(methods)
+        known = set(PRIMARY_DENSE_METHODS) | set(PRIMARY_SKETCH_METHODS) | {
+            "exact_mad_fd"
+        }
+        if not requested or not requested <= known:
+            raise ValueError(f"methods must be drawn from {sorted(known)}")
+        filtered = []
+        for task in tasks:
+            task["methods"] = tuple(
+                method for method in task["methods"] if method in requested
+            )
+            if task["methods"]:
+                filtered.append(task)
+        tasks = filtered
     if jobs == 1:
         for task in tasks:
             records.extend(_run_synthetic_block(task))
@@ -505,13 +531,18 @@ def _run_synthetic_block(task: dict[str, Any]) -> list[dict[str, Any]]:
                     residual_lambda=task["residual_lambda"],
                     marginal_lambda=task.get("marginal_lambda", 3.0),
                     k=used_k,
+                    baseline_dir=task.get("baseline_dir"),
                 )
             )
     return rows
 
 
 def run_calibration_audit(
-    *, seeds: Sequence[int], configuration: dict[str, Any], smoke: bool
+    *,
+    seeds: Sequence[int],
+    configuration: dict[str, Any],
+    smoke: bool,
+    baseline_dir: str | None = None,
 ) -> list[dict[str, Any]]:
     dimensions = SMOKE_DENSE if smoke else FULL_DENSE
     orderings = (False, True)
@@ -539,6 +570,7 @@ def run_calibration_audit(
                     dimensions=dimensions,
                     parallel_lambda=float(configuration["parallel_lambda"]),
                     residual_lambda=float(configuration["residual_lambda"]),
+                    baseline_dir=baseline_dir,
                 )
                 calibration = stream.observed[: dimensions.calibration_size]
                 location = np.median(calibration, axis=0)
@@ -590,7 +622,11 @@ def run_calibration_audit(
 
 
 def run_epoch_audit(
-    *, seeds: Sequence[int], configuration: dict[str, Any], smoke: bool
+    *,
+    seeds: Sequence[int],
+    configuration: dict[str, Any],
+    smoke: bool,
+    baseline_dir: str | None = None,
 ) -> list[dict[str, Any]]:
     dimensions = SMOKE_DENSE if smoke else StudyDimensions(6000, 50, 5, 10, 512)
     change_points = (dimensions.n // 3, 2 * dimensions.n // 3)
@@ -614,6 +650,7 @@ def run_epoch_audit(
                 parallel_lambda=float(configuration["parallel_lambda"]),
                 residual_lambda=float(configuration["residual_lambda"]),
                 epoch_size=epoch_size if scheduled else None,
+                baseline_dir=baseline_dir,
             )
             reference_basis = stream["basis_scale_2"]
             records.append(

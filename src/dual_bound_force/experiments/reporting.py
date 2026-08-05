@@ -27,7 +27,7 @@ ALLOWED_STATUSES = {
 }
 DEPENDENCIES = ("numpy", "scipy", "numba", "scikit-learn", "psutil")
 PROJECT = Path(__file__).resolve().parents[3]
-IMPLEMENTATION_MANIFEST = PROJECT / "provenance/IMPLEMENTATION_MANIFEST.json"
+IMPLEMENTATION_MANIFEST = PROJECT / "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json"
 
 
 def sha256_file(path: str | Path) -> str:
@@ -92,7 +92,7 @@ def implementation_provenance() -> dict[str, Any]:
         "status": "recorded",
         "path": str(IMPLEMENTATION_MANIFEST.relative_to(PROJECT)),
         "manifest_sha256": sha256_file(IMPLEMENTATION_MANIFEST),
-        "source_tree_sha256": payload["source_tree_sha256"],
+        "source_tree_sha256": payload["scientific"]["source_tree_sha256"],
         "package_version": payload["package_version"],
     }
 

@@ -1,4 +1,4 @@
-"""Target-aware adapters around the estimator and separately installed prior-work packages."""
+"""Target-aware adapters with lazy, source-validated prior-work loading."""
 
 from __future__ import annotations
 
@@ -9,14 +9,16 @@ from typing import Any
 import numpy as np
 
 from dual_bound_force import DualBoundFORCE
-from force import ForceEstimator
-from src import DriftMADForce
-from sketch_force.research_baselines import (
+from .baseline_registry import (
+    force_estimator_class,
+    mad_force_estimator_class,
+    sketch_force_estimator_class,
+)
+from .native_baselines import (
     ExactMADFrequentDirections,
     FrequentDirectionsCovariance,
     RobustFrequentDirectionsCovariance,
 )
-from sketch_force import SketchFORCE
 
 from .metrics import covariance_to_correlation, principal_basis
 
@@ -86,8 +88,15 @@ def _state_bytes(estimator: Any) -> int:
 
 
 def _sketch_force_target(
-    matrix: np.ndarray, *, p: int, k: int, lam: float, trim_mode: str
-) -> tuple[SketchFORCE, np.ndarray, np.ndarray, np.ndarray]:
+    matrix: np.ndarray,
+    *,
+    p: int,
+    k: int,
+    lam: float,
+    trim_mode: str,
+    baseline_dir: str | None,
+) -> tuple[Any, np.ndarray, np.ndarray, np.ndarray]:
+    SketchFORCE = sketch_force_estimator_class(baseline_dir)
     estimator = SketchFORCE(p, k, lam=lam, trim_mode=trim_mode)
     transformed_rows = np.empty_like(matrix)
     accepted = np.empty(matrix.shape, dtype=bool)
@@ -113,6 +122,7 @@ def fit_method(
     parallel_lambda: float = 3.0,
     residual_lambda: float = 3.0,
     epoch_size: int | None = None,
+    baseline_dir: str | None = None,
 ) -> FitResult:
     values = np.asarray(matrix, dtype=float)
     if values.ndim != 2 or not len(values) or not np.isfinite(values).all():
@@ -136,10 +146,12 @@ def fit_method(
         estimator = None
         state = int(p * 8)
     elif method == "force":
+        ForceEstimator = force_estimator_class(baseline_dir)
         estimator = ForceEstimator(lambda_scale=marginal_lambda)
         correlation = estimator.fit(values)
         state = _state_bytes(estimator)
     elif method == "mad_force":
+        DriftMADForce = mad_force_estimator_class(baseline_dir)
         estimator = DriftMADForce(
             p,
             lam=marginal_lambda,
@@ -171,7 +183,12 @@ def fit_method(
     elif method in {"sketch_iqr", "sketch_mad"}:
         trim_mode = method.removeprefix("sketch_")
         estimator, transformed_target, transformed_scatter_target, marginal_accepted = _sketch_force_target(
-            values, p=p, k=k, lam=marginal_lambda, trim_mode=trim_mode
+            values,
+            p=p,
+            k=k,
+            lam=marginal_lambda,
+            trim_mode=trim_mode,
+            baseline_dir=baseline_dir,
         )
         correlation = estimator.get_correlation()
         transformed_scatter_estimate = estimator.get_covariance()

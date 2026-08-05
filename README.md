@@ -36,9 +36,13 @@ was changed. Both original and disclosed hashes are recorded in the manifest.
 ## Prior-study boundary
 
 FORCE, MAD-FORCE, and Sketch-FORCE are separately distributed prior projects. Their
-source code is not included here. The optional comparison runners require those
-packages to be installed separately; the frozen paper-result inputs remain fully
-available for table and figure regeneration without those packages.
+source code is not included here. Prior estimators are loaded only when selected.
+Supply `--baseline-dir` with `force/`, `mad-force/`, and `sketch-force/` source
+trees; every required file must match `baseline_sources.json`. The currently
+published upstream commits are not source-identical to the corrected generating
+revisions, so mismatches fail explicitly. Native FD, RFD, exact-MAD FD, and
+Dual-Bound runs do not require prior packages. The frozen paper-result inputs
+remain fully available for table and figure regeneration without those sources.
 
 Dual-Bound FORCE is released under the MIT License. The GitHub repository is the
 intended code disclosure; no DOI or separate archival version is planned.

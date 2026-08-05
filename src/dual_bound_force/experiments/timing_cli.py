@@ -15,9 +15,9 @@ from typing import Any
 import numpy as np
 
 from dual_bound_force import DualBoundFORCE
-from sketch_force import SketchFORCE
 
 from .baselines import _state_bytes
+from .baseline_registry import sketch_force_estimator_class
 from .reporting import envelope, write_bundle
 from .study import load_frozen_configuration
 
@@ -49,6 +49,7 @@ def _worker(args: argparse.Namespace) -> None:
     def fresh_fit(values: np.ndarray) -> dict[str, Any]:
         started = time.perf_counter_ns()
         if args.method == "sketch_mad":
+            SketchFORCE = sketch_force_estimator_class(args.baseline_dir)
             estimator = SketchFORCE(
                 args.p, args.k, lam=3.0, trim_mode="mad"
             )
@@ -196,6 +197,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--runs", type=int, default=20)
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--configuration", default="preregistration/frozen_configuration.json")
+    parser.add_argument(
+        "--baseline-dir",
+        help="directory containing hash-validated external baseline source trees",
+    )
     parser.add_argument("--output-dir", default="results/confirmatory")
     parser.add_argument("--timeout-seconds", type=float, default=900.0)
     parser.add_argument("--memory-limit-mb", type=int, default=4096)
@@ -255,6 +260,8 @@ def main(argv: list[str] | None = None) -> None:
                 "--memory-limit-mb",
                 str(args.memory_limit_mb),
             ]
+            if args.baseline_dir:
+                command.extend(["--baseline-dir", args.baseline_dir])
             record = _run_child(command, timeout=args.timeout_seconds)
             record.setdefault("method", method)
             record.setdefault("repetition", repetition)

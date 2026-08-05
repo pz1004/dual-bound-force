@@ -279,9 +279,23 @@ class DualBoundFORCE:
     def transform(self, row: np.ndarray) -> np.ndarray:
         """Transform a query with the parameters of the estimate being served."""
         value = self._validate_row(row)
+        # During scheduled recalibration, keep query preprocessing paired with
+        # the estimate still being served until the new epoch has one
+        # estimation observation. Initial calibration has no prior serving
+        # state, so its fitted map is usable immediately.
+        if self._last_completed is not None and self.effective_n == 0:
+            state = self._last_completed
+            return self._transform_with(
+                value,
+                location=state.location,
+                scale=state.scale,
+                basis=state.basis,
+                parallel_radius=state.parallel_radius,
+                residual_radius=state.residual_radius,
+                count_diagnostics=False,
+            )
         if (
             self.phase == "estimating"
-            and self.effective_n > 0
             and self.location is not None
         ):
             assert self.scale is not None and self.basis is not None
@@ -306,7 +320,7 @@ class DualBoundFORCE:
                 residual_radius=state.residual_radius,
                 count_diagnostics=False,
             )
-        raise NotFittedError("no estimation observations are available")
+        raise NotFittedError("initial calibration has not completed")
 
     def _snapshot_current(self) -> None:
         if self._sketch is None or self.effective_n <= 0:
