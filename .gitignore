@@ -5,3 +5,6 @@ __pycache__/
 build/
 dist/
 generated-paper-assets/
+preregistration/
+provenance/
+DISCLOSURE_MANIFEST.json

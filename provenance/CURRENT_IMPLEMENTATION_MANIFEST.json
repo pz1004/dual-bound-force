@@ -7,9 +7,9 @@
         "sha256": "918b2d4556e5cf946a9017811dc1bd9494e95130ebaae616ec360a493a2a8812"
       },
       {
-        "bytes": 2319,
+        "bytes": 8055,
         "path": "README.md",
-        "sha256": "c8993c038b8f4e64fa82214be48b48da8e2afbfb74ff7862cfafe980d9b40f1d"
+        "sha256": "d2f63f43a04fc53f3a4e38a18d85cfe1d0e028252c5cb684dc0e66252a63da87"
       },
       {
         "bytes": 576,
@@ -38,7 +38,7 @@
       }
     ],
     "scope": "public packaging, MIT licensing, documentation, and verification tools",
-    "source_tree_sha256": "fa803a68aee59afd1ccbcb8b51de983fa50e648116ea759ce3af337d421b115d"
+    "source_tree_sha256": "b44993b9d1a8a8e4c555f25ce064a6811276055143d3285d3d530c5abf5141f0"
   },
   "historical_result_manifest": {
     "qualification": "immutable private scientific provenance for frozen paper results",

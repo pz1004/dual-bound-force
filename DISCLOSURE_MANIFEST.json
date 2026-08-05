@@ -2,7 +2,7 @@
   "current_implementation_manifest": {
     "path": "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json",
     "schema_version": "2.0",
-    "sha256": "4f8a1c1e00f1a830b17506bdf458bb68aac7567fb889b3aed86c15aa77cc3743"
+    "sha256": "14496328681d598f13f83427ca65b3c179847f990ecd4c6dbead4d297d70b69f"
   },
   "exclusions": [
     "manuscript sources and rendered PDFs",
@@ -30,9 +30,9 @@
     {
       "category": "source",
       "path": ".gitignore",
-      "sha256": "4a07f09c0cb04899ba48c28f788686e32b95d66aa671ee015e60c6be4a41734b",
+      "sha256": "6a99b97585285733a3052efeb5a8dd0b1956083bc51eb16180671d6048aec932",
       "source_path": ".gitignore",
-      "source_sha256": "20681aac664c92a78e183b5a05d57f05d1ad55bf7baa302c80bd8c8495e5ee5f"
+      "source_sha256": "973373df50d180e9dc103ce4850c8f40bfc206c85d3b2780560ee3fbe06491da"
     },
     {
       "category": "source",
@@ -45,7 +45,7 @@
     {
       "category": "source",
       "path": "README.md",
-      "sha256": "c8993c038b8f4e64fa82214be48b48da8e2afbfb74ff7862cfafe980d9b40f1d",
+      "sha256": "d2f63f43a04fc53f3a4e38a18d85cfe1d0e028252c5cb684dc0e66252a63da87",
       "source_path": "README.md",
       "source_sha256": "96d386b0b362767da2e5eb2899e1f0755bb278afd650e3829996d114e2f686e6"
     },
@@ -76,7 +76,7 @@
     {
       "category": "source",
       "path": "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json",
-      "sha256": "4f8a1c1e00f1a830b17506bdf458bb68aac7567fb889b3aed86c15aa77cc3743",
+      "sha256": "14496328681d598f13f83427ca65b3c179847f990ecd4c6dbead4d297d70b69f",
       "source_path": "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json",
       "source_sha256": "ac0c87d571e6a4259993fe15592a1f47556a455532b5bf28064cfe6b5a07c693"
     },
@@ -462,9 +462,9 @@
       "category": "source",
       "path": "tools/verify_disclosure.py",
       "portability_transform": false,
-      "sha256": "a0a76a06e19515bcee2472e44aa32b54bab36e5a940d278f34db8140d4b95bc9",
+      "sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d",
       "source_path": "tools/disclosure_verify.py",
-      "source_sha256": "a0a76a06e19515bcee2472e44aa32b54bab36e5a940d278f34db8140d4b95bc9"
+      "source_sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d"
     }
   ],
   "license": "MIT",
