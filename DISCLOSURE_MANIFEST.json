@@ -462,9 +462,9 @@
       "category": "source",
       "path": "tools/verify_disclosure.py",
       "portability_transform": false,
-      "sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d",
+      "sha256": "a0a76a06e19515bcee2472e44aa32b54bab36e5a940d278f34db8140d4b95bc9",
       "source_path": "tools/disclosure_verify.py",
-      "source_sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d"
+      "source_sha256": "a0a76a06e19515bcee2472e44aa32b54bab36e5a940d278f34db8140d4b95bc9"
     }
   ],
   "license": "MIT",
