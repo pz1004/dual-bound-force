@@ -48,6 +48,7 @@ def main() -> None:
         ROOT / "README.md",
         ROOT / "THIRD_PARTY_NOTICES.md",
         ROOT / "tools/build_implementation_manifest.py",
+        ROOT / "tools/disclosure_spec.py",
         ROOT / "tools/verify_disclosure.py",
         ROOT / "tools/generate_paper_assets.py",
     ]

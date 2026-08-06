@@ -1,10 +1,25 @@
+# Python environments and caches
+.venv/
+venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+
+# Build products
 build/
 dist/
+
+# Local datasets and generated experiment output
+data/
 generated-paper-assets/
-preregistration/
-provenance/
+results/smoke/
+results/development/
+results/confirmatory/
+results/oracle/
+results/threshold/
+results/retention/
+results/structural-ceiling/
+
+# Local disclosure audit artifact
 DISCLOSURE_MANIFEST.json

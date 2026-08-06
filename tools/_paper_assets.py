@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+FIGURE_DPI = 600
+
 PROJECT = Path(__file__).resolve().parents[1]
 ARTICLE = PROJECT / "manuscript/article"
 DEVELOPMENT = PROJECT / "results/development/dual-bound-force-development-full.json"
@@ -601,7 +603,13 @@ def make_figures(
     axes[1].set_title("Descriptive accuracy-resource points")
     axes[1].grid(alpha=0.25)
     fig.tight_layout()
-    fig.savefig(ARTICLE / "figure_synthetic_frontier.pdf", bbox_inches="tight")
+    fig.savefig(
+        ARTICLE / "figure_synthetic_frontier.png",
+        dpi=FIGURE_DPI,
+        format="png",
+        bbox_inches="tight",
+        facecolor="white",
+    )
     plt.close(fig)
 
     audit = [row for row in rows if row.get("tier") == "calibration_audit"]
@@ -622,7 +630,13 @@ def make_figures(
     ax.set_ylabel("Relative / normalized error")
     ax.legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    fig.savefig(ARTICLE / "figure_calibration_audit.pdf", bbox_inches="tight")
+    fig.savefig(
+        ARTICLE / "figure_calibration_audit.png",
+        dpi=FIGURE_DPI,
+        format="png",
+        bbox_inches="tight",
+        facecolor="white",
+    )
     plt.close(fig)
 
 
@@ -659,7 +673,13 @@ def make_threshold_figure(rows: list[dict[str, Any]]) -> dict[str, float]:
     axes[1, 0].set_ylabel("Subspace error")
     axes[0, 0].legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    fig.savefig(ARTICLE / "figure_threshold_sensitivity.pdf", bbox_inches="tight")
+    fig.savefig(
+        ARTICLE / "figure_threshold_sensitivity.png",
+        dpi=FIGURE_DPI,
+        format="png",
+        bbox_inches="tight",
+        facecolor="white",
+    )
     plt.close(fig)
     return optima
 
@@ -927,9 +947,9 @@ def main() -> None:
             "table_target_decomposition.tex",
             "table_external.tex", "table_pbmc.tex", "table_resources.tex",
             "table_retention.tex",
-            "figure_synthetic_frontier.pdf",
-            "figure_calibration_audit.pdf",
-            "figure_threshold_sensitivity.pdf",
+            "figure_synthetic_frontier.png",
+            "figure_calibration_audit.png",
+            "figure_threshold_sensitivity.png",
         ],
     }
     (PROJECT / "manuscript/ASSET_MANIFEST.json").write_text(

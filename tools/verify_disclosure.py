@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the minimal public-disclosure staging tree."""
+"""Verify the public source tree and the paper-result disclosure."""
 
 from __future__ import annotations
 
@@ -8,6 +8,12 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+
+from disclosure_spec import (
+    PAPER_ASSET_DEPENDENCIES,
+    PAPER_RESULT_FILES,
+    REPOSITORY_URL,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,61 +43,73 @@ def is_ephemeral(path: Path) -> bool:
     )
 
 
-def main() -> None:
-    manifest = strict_json(ROOT / "DISCLOSURE_MANIFEST.json")
-    records = manifest["files"]
-    recorded_paths = {record["path"] for record in records}
-    actual_paths = {
+def public_files() -> set[str]:
+    return {
         path.relative_to(ROOT).as_posix()
         for path in ROOT.rglob("*")
         if path.is_file()
         and not is_ephemeral(path)
-        and path.name != "DISCLOSURE_MANIFEST.json"
-        and not path.relative_to(ROOT).as_posix().startswith("generated-paper-assets/")
+        and not path.relative_to(ROOT).as_posix().startswith(
+            "generated-paper-assets/"
+        )
     }
-    if actual_paths != recorded_paths:
-        missing = sorted(recorded_paths - actual_paths)
-        unexpected = sorted(actual_paths - recorded_paths)
-        raise RuntimeError(f"manifest mismatch: missing={missing}, unexpected={unexpected}")
 
-    for record in records:
-        path = ROOT / record["path"]
-        observed = sha256(path)
-        if observed != record["sha256"]:
-            raise RuntimeError(f"hash mismatch for {record['path']}")
-        if record["category"] == "paper_result":
-            text = path.read_text(encoding="utf-8")
-            if "/home/" in text or "\\Users\\" in text:
-                raise RuntimeError(f"machine-local path remains in {record['path']}")
-            if path.suffix == ".json":
-                strict_json(path)
-            elif path.suffix == ".csv":
-                with path.open(encoding="utf-8", newline="") as stream:
-                    reader = csv.DictReader(stream)
-                    if not reader.fieldnames or next(reader, None) is None:
-                        raise RuntimeError(f"empty CSV result {record['path']}")
 
-    dependencies = manifest["paper_asset_dependencies"]
-    for asset, inputs in dependencies.items():
+def verify_results() -> None:
+    expected = set(PAPER_RESULT_FILES)
+    observed = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "results/paper").rglob("*")
+        if path.is_file() and not is_ephemeral(path)
+    }
+    if observed != expected:
+        raise RuntimeError(
+            "paper-result set mismatch: "
+            f"missing={sorted(expected - observed)}, "
+            f"unexpected={sorted(observed - expected)}"
+        )
+
+    for relative in PAPER_RESULT_FILES:
+        path = ROOT / relative
+        text = path.read_text(encoding="utf-8")
+        if "/home/" in text or "\\Users\\" in text:
+            raise RuntimeError(f"machine-local path remains in {relative}")
+        if path.suffix == ".json":
+            strict_json(path)
+        elif path.suffix == ".csv":
+            with path.open(encoding="utf-8", newline="") as stream:
+                reader = csv.DictReader(stream)
+                if not reader.fieldnames or next(reader, None) is None:
+                    raise RuntimeError(f"empty CSV result {relative}")
+
+    for asset, inputs in PAPER_ASSET_DEPENDENCIES.items():
         if not inputs:
             raise RuntimeError(f"asset has no declared input: {asset}")
-        for item in inputs:
-            if item not in recorded_paths:
-                raise RuntimeError(f"undeclared input {item} for {asset}")
+        unknown = set(inputs) - expected
+        if unknown:
+            raise RuntimeError(f"unknown inputs for {asset}: {sorted(unknown)}")
 
+
+def verify_boundaries(files: set[str]) -> None:
     forbidden = {"manuscript", "output", "data", "literature", "supplement"}
-    leaked = sorted(path for path in actual_paths if Path(path).parts[0] in forbidden)
+    leaked = sorted(path for path in files if Path(path).parts[0] in forbidden)
     if leaked:
         raise RuntimeError(f"excluded research material leaked into disclosure: {leaked}")
-    snapshots = sorted(
-        path for path in actual_paths if "_snapshots" in Path(path).parts
-    )
+    snapshots = sorted(path for path in files if "_snapshots" in Path(path).parts)
     if snapshots:
         raise RuntimeError(f"prior-study source snapshots leaked into disclosure: {snapshots}")
-    if manifest.get("license") != "MIT":
-        raise RuntimeError("disclosure license is not MIT")
-    if manifest.get("repository") != "https://github.com/pz1004/dual-bound-force":
-        raise RuntimeError("unexpected disclosure repository URL")
+    if "DISCLOSURE_MANIFEST.json" in files:
+        raise RuntimeError("repository-level disclosure manifest must not be tracked")
+
+    license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
+    if "MIT License" not in license_text:
+        raise RuntimeError("repository license is not MIT")
+    for relative in ("README.md", "pyproject.toml"):
+        if REPOSITORY_URL not in (ROOT / relative).read_text(encoding="utf-8"):
+            raise RuntimeError(f"repository URL missing from {relative}")
+
+
+def verify_current_fingerprints() -> None:
     current = strict_json(ROOT / "provenance/CURRENT_IMPLEMENTATION_MANIFEST.json")
     if current.get("schema_version") != "2.0":
         raise RuntimeError("unexpected current implementation-manifest schema")
@@ -100,18 +118,24 @@ def main() -> None:
             source = ROOT / record["path"]
             if not source.is_file() or sha256(source) != record["sha256"]:
                 raise RuntimeError(
-                    f"current {scope} implementation hash mismatch for {record['path']}"
+                    f"current {scope} implementation hash mismatch for "
+                    f"{record['path']}"
                 )
+
+
+def main() -> None:
+    files = public_files()
+    verify_results()
+    verify_boundaries(files)
+    verify_current_fingerprints()
     print(
         json.dumps(
             {
                 "status": "verified",
-                "file_count": len(records),
-                "source_file_count": sum(r["category"] == "source" for r in records),
-                "paper_result_file_count": sum(
-                    r["category"] == "paper_result" for r in records
-                ),
-                "paper_asset_count": len(dependencies),
+                "file_count": len(files),
+                "source_file_count": sum(path.endswith(".py") for path in files),
+                "paper_result_file_count": len(PAPER_RESULT_FILES),
+                "paper_asset_count": len(PAPER_ASSET_DEPENDENCIES),
             },
             sort_keys=True,
         )

@@ -7,9 +7,9 @@
         "sha256": "918b2d4556e5cf946a9017811dc1bd9494e95130ebaae616ec360a493a2a8812"
       },
       {
-        "bytes": 8055,
+        "bytes": 7812,
         "path": "README.md",
-        "sha256": "d2f63f43a04fc53f3a4e38a18d85cfe1d0e028252c5cb684dc0e66252a63da87"
+        "sha256": "de8d8dcf326a24f0ff50544d07468d03f11863ae176bc4606c7d40603cb2016f"
       },
       {
         "bytes": 576,
@@ -22,23 +22,28 @@
         "sha256": "1247f1a8e7cb27e61294379b06752b1c44b987878722a982de53c36400aade22"
       },
       {
-        "bytes": 2975,
+        "bytes": 3018,
         "path": "tools/build_implementation_manifest.py",
-        "sha256": "5d5b2d12281f643ae55b9a903cbb918c61a9d5052916f61cc080aae23bc8afb8"
+        "sha256": "120f2fe39ad26fb3abc2c338b66599c64ad2f624c6976be789352d7132022331"
       },
       {
-        "bytes": 12754,
+        "bytes": 2852,
+        "path": "tools/disclosure_spec.py",
+        "sha256": "cb3f8a3759c24ea43d17483b776e9429d99e7dd176478b64463b25f622bee585"
+      },
+      {
+        "bytes": 12840,
         "path": "tools/generate_paper_assets.py",
-        "sha256": "861854d589629245e4d0981d1c7d9d61a68208f51866b8c83f302a9a7a3db0a4"
+        "sha256": "5c41ba238855294934de10382aa3809838c62acc0543f665cabd19565b4351b7"
       },
       {
-        "bytes": 4680,
+        "bytes": 4969,
         "path": "tools/verify_disclosure.py",
-        "sha256": "02a771dfc0aedddfb99d86c6e17bd09c3ca287f0f6731a8372f42fd947904f3d"
+        "sha256": "bf25f3527f8aa7abd896331caa290ff7c857d5158379bad3455cc7830c041c9b"
       }
     ],
     "scope": "public packaging, MIT licensing, documentation, and verification tools",
-    "source_tree_sha256": "b44993b9d1a8a8e4c555f25ce064a6811276055143d3285d3d530c5abf5141f0"
+    "source_tree_sha256": "ee710c96f2f14d090b675eb5955e453cbd873bcf91b31f46e0829ad38ea4f37e"
   },
   "historical_result_manifest": {
     "qualification": "immutable private scientific provenance for frozen paper results",

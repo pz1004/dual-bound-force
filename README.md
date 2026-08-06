@@ -1,68 +1,68 @@
 # Dual-Bound FORCE
 
-Dual-Bound FORCE is a robust streaming correlation and principal-subspace
-estimator for contaminated, high-dimensional data. The source code is released
-under the MIT License at <https://github.com/pz1004/dual-bound-force>.
+Dual-Bound FORCE estimates correlations and low-rank principal subspaces from
+contaminated, high-dimensional data streams. It controls each row before adding
+that row to a compact Frequent Directions sketch, so memory does not grow with
+the length of the stream.
 
-This disclosure contains the executable estimator, experiment runners, portable
-tests, frozen experimental configuration, and only the result files used to
-generate the paper's tables and figures. It excludes manuscript files, external
-datasets, caches, exploratory results, and source code from the separately
-published FORCE, MAD-FORCE, and Sketch-FORCE projects.
+This repository provides the estimator, experiment code, tests, fixed study
+configuration, and the result files that generated the paper's tables and
+figures. It does not redistribute FORCE, MAD-FORCE, or Sketch-FORCE, which are
+available through their own repositories. We release Dual-Bound FORCE under the
+MIT License at <https://github.com/pz1004/dual-bound-force>.
 
 ## Algorithm summary
 
-Dual-Bound FORCE combines robust marginal calibration, two complementary row
-influence bounds, and a Frequent Directions sketch:
+Dual-Bound FORCE processes a stream in five stages:
 
-1. **Calibrate the marginals.** The first `calibration_size` observations are
-   stored. For each coordinate, the estimator computes the exact empirical
-   median and the normal-consistent median absolute deviation. A positive scale
-   floor protects constant or nearly constant coordinates.
-2. **Construct a calibration subspace.** Calibration rows are standardized,
-   clipped coordinatewise to `[-marginal_lambda, marginal_lambda]`, and passed
-   through a preliminary Frequent Directions sketch. Its leading right-singular
-   vectors define a basis that remains fixed during the estimation phase.
-3. **Calibrate component radii.** Each standardized calibration row is decomposed
-   into a component parallel to the basis and an orthogonal residual. Robust
-   upper radii are computed from the empirical medians and median absolute
-   deviations of the two component norms.
-4. **Bound each estimation row.** A new row is standardized and marginally
-   clipped using the fixed calibration map. Its parallel and residual components
-   are then contracted independently when their norms exceed the corresponding
-   calibrated radii. Thus, large modeled-direction leverage and large
-   out-of-subspace residuals are controlled separately.
-5. **Update the sketch.** The bounded row is inserted into a `2k`-by-`p`
-   Frequent Directions buffer. Calibration rows are excluded from the estimation
-   denominator. The primary outputs are the normalized correlation estimate and
-   its leading subspace. `get_scale_scatter()` returns a scale-reconstructed
-   robust scatter and should not be interpreted as an unconditional classical
-   covariance estimate.
+1. **Calibrate each feature.** The estimator reserves the first
+   `calibration_size` rows and computes an exact empirical median and a
+   normal-consistent median absolute deviation for every feature. A positive
+   scale floor handles constant and nearly constant features.
+2. **Learn a reference subspace.** It standardizes the calibration rows, clips
+   each coordinate to `[-marginal_lambda, marginal_lambda]`, and builds a
+   preliminary Frequent Directions sketch. The leading right-singular vectors
+   form the reference basis for the estimation phase.
+3. **Set two influence limits.** It splits each standardized calibration row
+   into a component parallel to the reference basis and an orthogonal residual.
+   It then uses robust summaries of their norms to set separate parallel and
+   residual radii.
+4. **Transform each new row.** It applies the fixed location and scale, clips
+   extreme coordinates, and contracts the parallel and residual components
+   independently when they exceed their radii. This step controls both
+   modeled-direction leverage and out-of-subspace energy.
+5. **Update the correlation sketch.** It inserts the bounded row into a
+   `2k`-by-`p` Frequent Directions buffer. It excludes calibration rows from the
+   estimation denominator and normalizes the resulting scatter to obtain a
+   correlation matrix and its leading subspace.
 
-With fixed sketch rank `k`, active estimation state is proportional to `p*k + p`.
-Calibration temporarily requires storage proportional to
-`p*(calibration_size + k)`, and requesting a dense correlation or scatter matrix
-creates a `p`-by-`p` output. Optional scheduled epochs recalibrate at known
-intervals; they do not perform change-point detection.
+For a fixed sketch rank `k`, the active estimation state grows in proportion to
+`p*k + p`. Calibration temporarily stores data proportional to
+`p*(calibration_size + k)`. A dense correlation or scatter output still needs a
+`p`-by-`p` array. Treat `get_scale_scatter()` as a scale-reconstructed robust
+scatter, not as an unconditional estimate of classical covariance.
+
+You can also set `epoch_size` to recalibrate at known intervals. This scheduled
+mode does not detect change points.
 
 ## Environments
 
-- **Python:** 3.11 or newer; the reported verification used Python 3.12.3.
-- **Core dependencies:** NumPy 2.0 or newer, SciPy 1.12 or newer, and Numba 0.65
-  or newer.
-- **Testing dependencies:** pytest, scikit-learn, and psutil.
-- **Paper-asset dependency:** Matplotlib.
-- **Hardware:** CPU execution; no graphics processor is required. Resource-capped
-  experiment runners use the POSIX `resource` interface and are therefore best
-  run on Linux or macOS.
+- Use Python 3.11 or newer. We verified the reported release with Python 3.12.3.
+- The core package uses NumPy, SciPy, and Numba.
+- The test suite also uses pytest, scikit-learn, and psutil.
+- Paper-asset generation uses Matplotlib.
+- The estimator runs on a central processing unit and does not require a
+  graphics processor.
+- The resource-capped experiment runners use the POSIX `resource` interface, so
+  run those tools on Linux or macOS.
 
-The exact package versions used for verification are recorded in
-`requirements.lock`. Numerical timing depends on the processor and linear
-algebra library, so timing experiments explicitly record their environment.
+See `requirements.lock` for the exact package versions used during verification.
+Timing will vary with the processor and numerical library, and the experiment
+runners record that environment in their output.
 
 ## Installation
 
-Clone the repository and create an isolated environment:
+Clone the repository and create an isolated Python environment:
 
 ```bash
 git clone https://github.com/pz1004/dual-bound-force.git
@@ -72,38 +72,36 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 ```
 
-Install the package for ordinary use:
+Install the package in editable mode:
 
 ```bash
 python -m pip install -e .
 ```
 
-Install the testing and paper-asset dependencies when needed:
+Add the testing and paper-asset dependencies when you need them:
 
 ```bash
 python -m pip install -e ".[test,paper]"
 ```
 
-For the exact verified environment, install the pinned dependencies before the
-package:
+To recreate the verified environment exactly, install the pinned packages first:
 
 ```bash
 python -m pip install -r requirements.lock
 python -m pip install -e . --no-deps
 ```
 
-On Windows, activate the environment with `.venv\Scripts\activate` instead of
-the POSIX activation command. The estimator API is portable, although the
-resource-capped experiment runners noted above require a POSIX-like system.
+On Windows, activate the environment with `.venv\Scripts\activate`. The estimator
+API works across platforms, but the resource-capped experiment runners require a
+POSIX-like system.
 
 ## Usage
 
-### Python API
+### Estimate a correlation matrix and subspace
 
-The following example uses the fixed parameter values reported in the paper.
-The input must be a finite two-dimensional array whose columns match `p`. At
-least one observation after calibration is required before correlation, scatter,
-or subspace estimates are available.
+The example below uses the parameter values fixed for the paper. Pass a finite
+two-dimensional array with `p` columns. The estimator uses the first 512 rows for
+calibration and the remaining rows for estimation.
 
 ```python
 import numpy as np
@@ -133,7 +131,7 @@ print(correlation.shape, subspace.shape)
 print(diagnostics["effective_n"], diagnostics["state_bytes"])
 ```
 
-For a row-at-a-time stream, call `update()` instead of `fit()`:
+For a row-at-a-time stream, call `update()`:
 
 ```python
 estimator = DualBoundFORCE(p=50, k=10, calibration_size=512)
@@ -143,16 +141,15 @@ for row in stream:
 correlation = estimator.finalize()
 ```
 
-`transform()` becomes available as soon as initial calibration completes and
-does not modify estimator state. `get_correlation()`, `get_scale_scatter()`,
-`get_subspace()`, and `finalize()` additionally require at least one estimation
-row. Undefined zero-variance correlations, including their diagonal entries,
-are returned as zero.
+You may call `transform()` as soon as calibration finishes; it does not change
+the estimator state. The correlation, scatter, subspace, and `finalize()` methods
+also need at least one estimation row. The estimator returns zero for undefined
+zero-variance correlations, including their diagonal entries.
 
-### Run a native smoke experiment
+### Run a quick native experiment
 
-This command exercises only Dual-Bound FORCE and does not require the prior
-FORCE-family repositories:
+This smoke run uses only Dual-Bound FORCE and does not need an external baseline
+repository:
 
 ```bash
 dual-bound-force-study \
@@ -163,47 +160,50 @@ dual-bound-force-study \
   --output-dir results/smoke
 ```
 
-Use `dual-bound-force-study --help` to inspect all tier, seed, resource, and
-output options. Every experiment writes machine-readable JSON and CSV output.
+Run `dual-bound-force-study --help` to see the available tiers, seeds, resource
+limits, and output options. Each runner writes machine-readable JSON and CSV
+files.
 
-Comparisons using FORCE, MAD-FORCE, or Sketch-FORCE require a separate
-`--baseline-dir` containing those three source trees. Required files are checked
-against `src/dual_bound_force/experiments/baseline_sources.json`; missing or
-mismatched sources cause an explicit failure rather than a silent substitution.
-Native Frequent Directions, ridge-regularized Frequent Directions, exact-median-
-absolute-deviation Frequent Directions, and Dual-Bound FORCE do not require
-external baseline repositories.
+Experiments that select FORCE, MAD-FORCE, or Sketch-FORCE need a separate
+`--baseline-dir` containing those three source trees. The runner checks the
+required files against `src/dual_bound_force/experiments/baseline_sources.json`
+and stops when a source is missing or does not match. It never substitutes a
+different implementation silently. Native Frequent Directions,
+ridge-regularized Frequent Directions, exact-median-absolute-deviation Frequent
+Directions, and Dual-Bound FORCE do not need external baseline repositories.
 
-### Regenerate the disclosed paper assets
+### Recreate the paper tables and figures
 
-The files under `results/paper/` are the exact JSON and CSV inputs used by the
-paper's tables and figures. Regenerate the disclosed assets without rerunning
-the experiments as follows:
+The `results/paper/` directory contains the exact JSON and CSV inputs used in the
+paper. You can regenerate the disclosed tables and 600-dpi PNG figures without
+rerunning an experiment:
 
 ```bash
 python tools/verify_disclosure.py
 python tools/generate_paper_assets.py --output-dir generated-paper-assets
 ```
 
-Run the portable test suite with:
+Run the tests with:
 
 ```bash
 python -m pytest -q
 ```
 
-`DISCLOSURE_MANIFEST.json` records the disclosure allowlist, file hashes,
-path-normalization records, and the mapping from each generated paper asset to
-its result inputs. Machine-local paths were normalized without changing any
-numerical result, seed, parameter, status, checksum, or statistical decision.
+The verification tool checks the disclosed result set, strict JSON and CSV
+syntax, portable paths, source fingerprints, licensing, and repository
+boundaries. We normalized machine-local paths without changing any numerical
+result, seed, parameter, status, checksum, or statistical decision.
 
 ## Repository layout
 
-- `src/dual_bound_force/`: estimator, theory utilities, native baselines, and
-  experiment runners.
-- `results/paper/`: only the result bundles used by paper tables and figures.
-- `preregistration/`: frozen experimental configuration and checksum.
-- `tools/generate_paper_assets.py`: table and figure regeneration.
-- `tools/verify_disclosure.py`: disclosure integrity validation.
-- `DISCLOSURE_MANIFEST.json`: hashes and result-to-asset dependency records.
+- `src/dual_bound_force/` contains the estimator, theory utilities, native
+  baselines, and experiment runners.
+- `results/paper/` contains only the result bundles used by paper tables and
+  figures.
+- `preregistration/` contains the fixed experimental configuration and checksum.
+- `tools/generate_paper_assets.py` rebuilds the disclosed tables and figures.
+- `tools/verify_disclosure.py` checks the public repository and result files.
+- `tests/` contains portable estimator, theory, baseline, and solver tests.
 
-No permanent code DOI or separately versioned archive is planned.
+We do not plan to assign a permanent code DOI or maintain a separate versioned
+archive.

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Regenerate every final-paper table and figure from disclosed result inputs.
 
-This is the portable disclosure entry point.  It deliberately generates assets
+This is the portable disclosure entry point. It deliberately generates assets
 into a user-selected directory and does not read manuscript sources, cached data,
-or any result bundle outside the allowlist recorded in DISCLOSURE_MANIFEST.json.
+or any result bundle outside the public result set.
 """
 
 from __future__ import annotations
@@ -20,7 +20,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import _paper_assets as base
+from disclosure_spec import PAPER_ASSET_DEPENDENCIES
 
+
+FIGURE_DPI = 600
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results/paper"
@@ -74,7 +77,7 @@ def make_paired_contrast_figure(
         ("Strong gap", "strong", "#ef6c00", "s", 0.0),
         ("Weak gap", "weak", "#2e7d32", "^", 0.18),
     )
-    fig, axis = plt.subplots(figsize=(8.4, 4.8), dpi=150)
+    fig, axis = plt.subplots(figsize=(8.4, 4.8))
     positions = list(range(len(ordered)))
     for label, stratum, color, marker, offset in series:
         estimates: list[float] = []
@@ -116,7 +119,13 @@ def make_paired_contrast_figure(
     axis.grid(axis="x", alpha=0.22)
     axis.legend(frameon=False, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.18))
     fig.tight_layout(rect=(0.0, 0.08, 1.0, 1.0))
-    fig.savefig(output, bbox_inches="tight")
+    fig.savefig(
+        output,
+        dpi=FIGURE_DPI,
+        format="png",
+        bbox_inches="tight",
+        facecolor="white",
+    )
     plt.close(fig)
 
 
@@ -278,19 +287,18 @@ def main() -> None:
     base.write_retention_table(retention_rows)
     base.make_figures(rows, criteria, strata)
     base.make_threshold_figure(threshold_rows)
-    make_paired_contrast_figure(statistical, output / "figure_synthetic_frontier.pdf")
+    make_paired_contrast_figure(statistical, output / "figure_synthetic_frontier.png")
     make_structural_tables(structural, output)
     apply_final_editorial_wording(output)
 
-    asset_dependencies = strict_json(ROOT / "DISCLOSURE_MANIFEST.json")[
-        "paper_asset_dependencies"
-    ]
     produced = sorted(
-        path for path in output.iterdir() if path.suffix in {".tex", ".pdf"}
+        path for path in output.iterdir() if path.suffix in {".tex", ".png"}
     )
     manifest = {
         "schema_version": 1,
         "generator": "tools/generate_paper_assets.py",
+        "figure_format": "PNG",
+        "figure_dpi": FIGURE_DPI,
         "inputs": {
             path.name: sha256(path)
             for path in (
@@ -313,7 +321,7 @@ def main() -> None:
             )
         },
         "outputs": {path.name: sha256(path) for path in produced},
-        "paper_asset_dependencies": asset_dependencies,
+        "paper_asset_dependencies": PAPER_ASSET_DEPENDENCIES,
     }
     (output / "ASSET_BUILD_MANIFEST.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True, allow_nan=False) + "\n",
